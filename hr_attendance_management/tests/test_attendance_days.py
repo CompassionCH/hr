@@ -32,7 +32,7 @@ class TestAttendanceDays(SavepointCase):
         cls.env['ir.config_parameter'].set_param(
             'hr_attendance_management.max_extra_hours', '20')
 
-        # Create attendance days for employees
+        # 10 first day of month + yesterday twice
         attendances = cls.env['hr.attendance'].search([], order='check_in')
         cls.all_attendances = attendances
 
@@ -207,7 +207,7 @@ class TestAttendanceDays(SavepointCase):
         # for attendance day testing
         attendances = self.all_attendances
         date_start = attendances[0].check_in
-        date_stop = attendances[-1].check_out
+        date_stop = attendances[9].check_out
         self.env['create.hr.attendance.day'].create({
             'date_from': date_start[:10],
             'date_to': date_stop[:10],
