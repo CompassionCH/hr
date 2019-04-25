@@ -430,9 +430,6 @@ class HrAttendanceDay(models.Model):
             lambda r: r.category_ids & rd.employee_id.category_ids)
         rd.coefficient = co_ids[0].coefficient if co_ids else 1
 
-        for leave in rd.leave_ids:
-            leave.recompute_att_day()
-
         # check public holiday
         if self.env['hr.holidays.public'].is_public_holiday(
                 rd.date, rd.employee_id.id):
@@ -446,6 +443,9 @@ class HrAttendanceDay(models.Model):
             ('employee_id', '=', rd.employee_id.id),
             ('date', '=', rd.date),
         ])
+
+        for leave in rd.leave_ids:
+            leave._compute_att_day()
 
         # compute breaks
         rd.compute_breaks()

@@ -83,9 +83,9 @@ class HrEmployee(models.Model):
                 employee.attendance_days_ids.mapped('extra_hours_lost') or [0])
 
     @api.model
-    def _cron_create_attendance(self, domain=[], day=fields.Date.today()):
+    def _cron_create_attendance(self, domain=None, day=fields.Date.today()):
         att_day = self.env['hr.attendance.day']
-        employees = self.search(domain)
+        employees = self.search(domain or [])
         for employee in employees:
             # check if an entry already exists. If yes, it will not be
             # recreated

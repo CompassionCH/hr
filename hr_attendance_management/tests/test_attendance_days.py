@@ -3,8 +3,8 @@
 # Copyright (C) 2018 Compassion CH
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from datetime import datetime, timedelta
-from odoo import tools
 from odoo.tests import SavepointCase
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 import logging
 
 logger = logging.getLogger(__name__)
@@ -319,11 +319,9 @@ class TestAttendanceDays(SavepointCase):
         then we check that the due hour is correct
         """
 
-        format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-
         leave = self.pieter_leave_request
-        date_from = datetime.strptime(leave.date_from, format)
-        date_to = datetime.strptime(leave.date_to, format)
+        date_from = datetime.strptime(leave.date_from, DF)
+        date_to = datetime.strptime(leave.date_to, DF)
 
         date_data = [
             (True, date_from + timedelta(days=-1)),
