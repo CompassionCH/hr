@@ -117,7 +117,7 @@ class HrAttendanceDay(models.Model):
                     ('date_start', '<=', att_day.date),
                     '|', ('date_end', '=', False),
                     ('date_end', '>=', att_day.date)
-                ])
+                ], order='date_start desc', limit=1)
                 # ...or take the resource.calendar of employee
                 schedule = contracts.working_hours or (
                     att_day.employee_id.calendar_id)
@@ -429,6 +429,9 @@ class HrAttendanceDay(models.Model):
             ('day_of_week', '=', week_day)]).filtered(
             lambda r: r.category_ids & rd.employee_id.category_ids)
         rd.coefficient = co_ids[0].coefficient if co_ids else 1
+
+        for leave in rd.leave_ids:
+            leave.recompute_att_day()
 
         # check public holiday
         if self.env['hr.holidays.public'].is_public_holiday(

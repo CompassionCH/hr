@@ -9,14 +9,14 @@ class HrHolidays(models.Model):
 
     attendance_day_ids = fields.Many2many('hr.attendance.day', store=True,
                                           string='Attendances days',
-                                          compute='_compute_att_day')
+                                          compute='recompute_att_day')
 
     ##########################################################################
     #                             PUBLIC METHODS                             #
     ##########################################################################
     @api.depends('date_from', 'date_to', 'state')
     @api.multi
-    def _compute_att_day(self):
+    def recompute_att_day(self):
         att_days = self.env['hr.attendance.day']
         for rd in self:
             # Remove the current leave from the attendance_day.leave_ids in
