@@ -109,7 +109,6 @@ odoo.define('hr_attendance_management.attendance', function (require) {
     });
 
     greeting_message.include({
-
         setAttendanceMessageTimeout: function (context) {
             return function () {
                 setTimeout(function () {
@@ -118,22 +117,6 @@ odoo.define('hr_attendance_management.attendance', function (require) {
                     });
                 }, 5000);
             };
-        },
-
-        welcome_message: function () {
-            this._super();
-            if (!this.attendance.due_hours && !this.attendance.check_out &&
-             this.attendance.total_attendance === 0 &&
-              !this.attendance.has_change_day_request) {
-                // Remove timeout that redirects to main page after 5 seconds
-                clearTimeout(this.return_to_main_menu);
-                window.attendance_message_timeout =
-                    this.setAttendanceMessageTimeout(this);
-                window.add_timeout_button_event = function (className) {
-                    $('.'+className).click(window.attendance_message_timeout);
-                };
-                this.do_action('hr_attendance_management.change_day_wizard');
-            }
         },
     });
 });
