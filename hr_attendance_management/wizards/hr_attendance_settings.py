@@ -3,7 +3,7 @@
 # Copyright (C) 2018 Compassion CH
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
@@ -16,7 +16,8 @@ class HrAttendanceSettings(models.TransientModel):
     free_break = fields.Float('Free break (hour)')
     max_extra_hours = fields.Float('Max extra hours')
     beginning_date_for_balance_computation = fields.Date(
-        string="Date of beginning of new computation way for balance")
+        string="Date of beginning of new computation way for balance",
+        compute="set_beginning_date")
 
     ##########################################################################
     #                             PUBLIC METHODS                             #

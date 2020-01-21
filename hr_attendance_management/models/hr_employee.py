@@ -224,8 +224,8 @@ class HrEmployee(models.Model):
         max_extra_hours = self.env['base.config.settings'].create({})\
             .get_max_extra_hours()
         if not start_date:
-            start_date = fields.Date.to_string(
-                fields.Date.today().replace(month=1, day=1))
+            config = self.env['base.config.settings'].create({})
+            start_date = config.get_beginning_date_for_balance_computation()
         if not end_date:
             end_date = \
                 fields.Date.to_string(

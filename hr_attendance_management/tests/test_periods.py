@@ -126,8 +126,8 @@ class TestPeriod(SavepointCase):
 
         self.add_hours_to_last_attendance_day(1, self.gilles.id)
         self.gilles._compute_balance()
-        self.assertEquals(self.gilles.balance, 3.5)
-        self.assertEquals(self.gilles.period_ids[0].final_balance, 3.5)
+        self.assertEquals(self.gilles.balance, 4)
+        self.assertEquals(self.gilles.period_ids[0].final_balance, 4)
 
     def test_period_balances(self):
         self.gilles.period_ids.unlink()
@@ -170,7 +170,7 @@ class TestPeriod(SavepointCase):
                                         None,
                                         0)
         self.assertEquals(new_period.balance, 1)
-        self.assertEquals(new_period.final_balance, 3)
+        self.assertEquals(new_period.final_balance, 4)
         self.assertEquals(len(self.gilles.period_ids), 2)
         auto_created_period = \
             self.gilles.period_ids.sorted(key=lambda p: p.start_date)[0]
@@ -221,7 +221,7 @@ class TestPeriod(SavepointCase):
 
         self.gilles.initial_balance = 1
         self.assertEquals(new_period_4.final_balance, 4)
-        self.assertEquals(self.gilles.balance, 4)
+        self.assertEquals(self.gilles.balance, 5)
 
     # Add a period "inside" another one.
     # 1 more periods should be created (after) and 1 should be modified
