@@ -8,7 +8,13 @@ _logger = logging.getLogger(__name__)
 def post_init_hook(env):
     """Migrate calendars from contracts to calendar_ids
     to have consistent work schedule history"""
-    employees = env["hr.employee"].with_context(active_test=False).search([])
+    # Do not recompute the leaves of the employees when their calendar is
+    # regenerated: the leaves are kept as they are during the migration.
+    employees = (
+        env["hr.employee"]
+        .with_context(active_test=False, no_leave_resource_calendar_update=True)
+        .search([])
+    )
     for employee in employees.filtered("contract_ids"):
         contract_calendar_lines = []
         for contract in employee.contract_ids.sorted("date_start"):
@@ -65,5 +71,10 @@ def post_init_hook(env):
                 )
 
         employee.calendar_ids = contract_calendar_lines
-        # set correct calendar in contract
-        employee.contract_id.resource_calendar_id = employee.resource_calendar_id
+        # set correct calendar in contract. Use _write to bypass the
+        # hr_holidays_contract override, which recomputes all the leaves
+        # of the contract (and fails if allocations are not sufficient).
+        if employee.contract_id:
+            employee.contract_id._write(
+                {"resource_calendar_id": employee.resource_calendar_id.id}
+            )
